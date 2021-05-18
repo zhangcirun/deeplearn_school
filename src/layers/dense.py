@@ -1,5 +1,7 @@
 import numpy as np
 
+from activations.function import *
+
 
 class Dense:
     """
@@ -17,11 +19,21 @@ class Dense:
         self.weights = 0.1 * np.random.randn(n_input, n_neurons)  # weights initialization
         self.biases = np.zeros((1, n_neurons))  # biases initialization
 
-    def forward(self, inputs):
+    def forward(self, inputs, activations='relu'):
         """
         :param inputs: input batches matrix, each row is a input vector for a single batch
+        :param activations: activation function, default='relu'
         """
         self.output = np.dot(inputs, self.weights) + self.biases
+
+        if activations == 'linear':
+            self.output = Linear().forward(self.output)
+        elif activations == 'relu':
+            self.output = Relu().forward(self.output)
+        elif activations == 'sigmoid':
+            self.output = Sigmoid().forward(self.output)
+        else:
+            raise Exception("Invalid activation function")
 
 
 if __name__ == '__main__':
@@ -31,5 +43,6 @@ if __name__ == '__main__':
 
     layer1 = Dense(4, 5)
     layer2 = Dense(5, 2)
-    layer1.forward(X)
-    layer2.forward(layer1.output)
+    layer1.forward(X, 'sigmoid')
+    layer2.forward(layer1.output, 'relu')
+
