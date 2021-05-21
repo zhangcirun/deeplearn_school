@@ -24,3 +24,9 @@ class Relu(Activation):
 class Sigmoid(Activation):
     def forward(self, arr):
         return 1 / (1 + np.exp(-arr))
+
+
+class Softmax(Activation):
+    def forward(self, arr):
+        tmp = np.exp(arr) - np.max(arr, axis=1, keepdims=True)  # handle the overflowing issue
+        return tmp / np.sum(tmp, axis=1, keepdims=True)
